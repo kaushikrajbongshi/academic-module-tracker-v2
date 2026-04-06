@@ -1,0 +1,148 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.wrap { padding: 1rem 0; }
+.section { margin-bottom: 1.5rem; }
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: var(--border-radius-md);
+  margin-bottom: 8px; font-size: 15px; font-weight: 500;
+  color: var(--color-text-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+}
+.badge {
+  font-size: 11px; font-weight: 500; padding: 2px 8px;
+  border-radius: 99px; white-space: nowrap;
+}
+.badge-fe { background: #E6F1FB; color: #0C447C; }
+.badge-be { background: #E1F5EE; color: #085041; }
+.badge-db { background: #FAEEDA; color: #633806; }
+.badge-redis { background: #FCEBEB; color: #791F1F; }
+@media (prefers-color-scheme: dark) {
+  .badge-fe { background: #0C447C; color: #B5D4F4; }
+  .badge-be { background: #085041; color: #9FE1CB; }
+  .badge-db { background: #633806; color: #FAC775; }
+  .badge-redis { background: #791F1F; color: #F7C1C1; }
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { border-bottom: 0.5px solid var(--color-border-secondary); }
+thead th {
+  text-align: left; padding: 7px 10px; font-size: 11px; font-weight: 500;
+  color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em;
+}
+tbody tr { border-bottom: 0.5px solid var(--color-border-tertiary); }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 8px 10px; color: var(--color-text-primary); vertical-align: top; }
+td.task { color: var(--color-text-secondary); font-size: 12px; min-width: 110px; }
+td.lib { font-weight: 500; min-width: 140px; }
+td.note { color: var(--color-text-secondary); font-size: 12px; }
+.pill {
+  display: inline-block; font-size: 11px; padding: 1px 7px;
+  border-radius: 99px; border: 0.5px solid var(--color-border-secondary);
+  color: var(--color-text-secondary); margin-right: 3px;
+}
+.new { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
+@media (prefers-color-scheme: dark) {
+  .new { background: #27500A; color: #C0DD97; border-color: #3B6D11; }
+}
+</style>
+<div class="wrap">
+
+<!-- FRONTEND -->
+<div class="section">
+  <div class="section-header">
+    <span>Frontend</span>
+    <span class="badge badge-fe">Next.js + TypeScript</span>
+  </div>
+  <table>
+    <thead><tr><th>Task</th><th>Library</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="task">Framework</td><td class="lib">Next.js</td><td class="note">App router, SSR, SSG, API routes</td></tr>
+      <tr><td class="task">Language</td><td class="lib">TypeScript</td><td class="note">Type safety across entire codebase</td></tr>
+      <tr><td class="task">UI Components</td><td class="lib">Shadcn UI</td><td class="note">Accessible, composable, unstyled base</td></tr>
+      <tr><td class="task">Styling</td><td class="lib">Tailwind CSS</td><td class="note">Utility-first, JIT, dark mode built-in</td></tr>
+      <tr><td class="task">Forms</td><td class="lib">React Hook Form</td><td class="note">Performant, minimal re-renders</td></tr>
+      <tr><td class="task">Validation</td><td class="lib">Zod</td><td class="note">Schema validation, pairs with RHF perfectly</td></tr>
+      <tr><td class="task">API Fetching</td><td class="lib">TanStack Query</td><td class="note">Caching, background sync, pagination</td></tr>
+      <tr><td class="task">Tables</td><td class="lib">TanStack Table</td><td class="note">Sort, filter, paginate, virtual scroll</td></tr>
+      <tr><td class="task">Charts</td><td class="lib">Recharts + Shadcn Charts</td><td class="note">Use shadcn chart wrapper over raw Recharts</td></tr>
+      <tr><td class="task">Auth</td><td class="lib">NextAuth.js</td><td class="note">OAuth, JWT sessions, credential login</td></tr>
+      <tr><td class="task">URL State</td><td class="lib">nuqs <span class="pill new">add</span></td><td class="note">Filters, pagination, search in URL params</td></tr>
+      <tr><td class="task">Dates</td><td class="lib">date-fns <span class="pill new">add</span></td><td class="note">Formatting, manipulation, locale support</td></tr>
+      <tr><td class="task">Toasts</td><td class="lib">Sonner <span class="pill new">add</span></td><td class="note">Shadcn-native toast notifications</td></tr>
+      <tr><td class="task">Server Actions</td><td class="lib">next-safe-action <span class="pill new">add</span></td><td class="note">Type-safe server actions with Zod</td></tr>
+      <tr><td class="task">Rate Limiting</td><td class="lib">@upstash/ratelimit <span class="pill new">add</span></td><td class="note">For Next.js API routes on Vercel/edge</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- BACKEND -->
+<div class="section">
+  <div class="section-header">
+    <span>Backend</span>
+    <span class="badge badge-be">NestJS + TypeScript</span>
+  </div>
+  <table>
+    <thead><tr><th>Task</th><th>Library</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="task">Framework</td><td class="lib">NestJS</td><td class="note">Modular, DI, enterprise-grade structure</td></tr>
+      <tr><td class="task">Language</td><td class="lib">TypeScript</td><td class="note">End-to-end type safety</td></tr>
+      <tr><td class="task">ORM</td><td class="lib">Prisma</td><td class="note">Type-safe queries, migrations, seeds</td></tr>
+      <tr><td class="task">Auth</td><td class="lib">@nestjs/jwt + @nestjs/passport</td><td class="note">Guards, strategies, decorators out of box</td></tr>
+      <tr><td class="task">Password</td><td class="lib">bcrypt</td><td class="note">Hashing + salt rounds</td></tr>
+      <tr><td class="task">Validation</td><td class="lib">class-validator</td><td class="note">DTO decorators, NestJS native</td></tr>
+      <tr><td class="task">Transform DTOs</td><td class="lib">class-transformer <span class="pill new">add</span></td><td class="note">Serialize/deserialize alongside class-validator</td></tr>
+      <tr><td class="task">File Upload</td><td class="lib">Multer</td><td class="note">Multipart form handling, storage config</td></tr>
+      <tr><td class="task">Excel</td><td class="lib">ExcelJS <span class="pill new">upgrade</span></td><td class="note">Replace xlsx — better API, active maintenance</td></tr>
+      <tr><td class="task">Email</td><td class="lib">Nodemailer</td><td class="note">SMTP, templates, attachments</td></tr>
+      <tr><td class="task">Logging</td><td class="lib">Winston</td><td class="note">Structured logs, multiple transports</td></tr>
+      <tr><td class="task">API Docs</td><td class="lib">Swagger (@nestjs/swagger)</td><td class="note">Auto-generated from decorators</td></tr>
+      <tr><td class="task">Rate Limiting</td><td class="lib">@nestjs/throttler <span class="pill new">add</span></td><td class="note">Guard-based, per-route config</td></tr>
+      <tr><td class="task">Security Headers</td><td class="lib">Helmet <span class="pill new">add</span></td><td class="note">XSS, CSRF, clickjacking protection</td></tr>
+      <tr><td class="task">Config / Env</td><td class="lib">@nestjs/config <span class="pill new">add</span></td><td class="note">Typed env vars, validation on startup</td></tr>
+      <tr><td class="task">Background Jobs</td><td class="lib">BullMQ + @nestjs/bull <span class="pill new">add</span></td><td class="note">Queue emails, Excel exports, heavy tasks</td></tr>
+      <tr><td class="task">Caching</td><td class="lib">@nestjs/cache-manager <span class="pill new">add</span></td><td class="note">Decorator-based response caching</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- DATABASE -->
+<div class="section">
+  <div class="section-header">
+    <span>Database</span>
+    <span class="badge badge-db">MySQL + Prisma</span>
+  </div>
+  <table>
+    <thead><tr><th>Task</th><th>Library / Tool</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="task">Primary DB</td><td class="lib">MySQL</td><td class="note">Relational, transactions, foreign keys</td></tr>
+      <tr><td class="task">ORM / Migrations</td><td class="lib">Prisma</td><td class="note">Schema-first, auto migration, seeding</td></tr>
+      <tr><td class="task">Connection Pool</td><td class="lib">Prisma (built-in)</td><td class="note">Managed automatically per environment</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- REDIS -->
+<div class="section">
+  <div class="section-header">
+    <span>Redis Layer</span>
+    <span class="badge badge-redis">ioredis + BullMQ</span>
+  </div>
+  <table>
+    <thead><tr><th>Task</th><th>Library</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="task">Direct Redis Access</td><td class="lib">ioredis</td><td class="note">Tokens, blacklists, pub/sub, custom keys</td></tr>
+      <tr><td class="task">Redis Adapter</td><td class="lib">cache-manager-redis-yet</td><td class="note">Connects @nestjs/cache-manager to Redis</td></tr>
+      <tr><td class="task">Response Caching</td><td class="lib">@nestjs/cache-manager</td><td class="note">Cache heavy list/report endpoints</td></tr>
+      <tr><td class="task">Job Queues</td><td class="lib">BullMQ</td><td class="note">Email queue, Excel export, async tasks</td></tr>
+      <tr><td class="task">Queue Dashboard</td><td class="lib">Bull Board</td><td class="note">Visual monitor for all queues</td></tr>
+      <tr><td class="task">Refresh Tokens</td><td class="lib">ioredis (manual)</td><td class="note">Store with TTL — faster than DB</td></tr>
+      <tr><td class="task">JWT Blacklist</td><td class="lib">ioredis (manual)</td><td class="note">On logout, add token until expiry</td></tr>
+      <tr><td class="task">Rate Limit Store</td><td class="lib">@nestjs/throttler + Redis</td><td class="note">Distributed rate limiting across instances</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
