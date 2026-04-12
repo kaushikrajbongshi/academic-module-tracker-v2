@@ -1,0 +1,324 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat    = "cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// =======================
+// 1. Admin Model
+// =======================
+model Admin {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique @db.VarChar(100)
+  email      String   @unique @db.VarChar(150)
+  password   String   @db.VarChar(255)
+  status     Status   @default(A)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  @@map("admin")
+}
+
+// =======================
+// 2. Faculty_Role Model
+// =======================
+model Faculty_Role {
+  id          Int             @id @default(autoincrement())
+  description FacultyRoleType
+  faculties   Faculty[]
+
+  @@map("faculty_role")
+}
+
+
+
+// =======================
+// 3. Faculty Model 
+// =======================
+model Faculty {
+  id         Int      @id @default(autoincrement())
+  faculty_id String   @unique @db.VarChar(50)
+  email      String   @unique @db.VarChar(150)
+  username   String   @db.VarChar(100)
+  name       String   @db.VarChar(100)
+  password   String   @db.VarChar(255)
+  status     Status   @default(A)
+  role       Int
+  dept_id    String   @db.VarChar(10) // This is the foreign key
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  // Relations - notice how we reference dept_id directly
+  facultyRole       Faculty_Role       @relation(fields: [role], references: [id])
+  department        Department         @relation(fields: [dept_id], references: [dept_id]) // Use the existing dept_id field
+  facultyCourses    FacultyCourse[]
+  topicCoverages    TopicCoverage[]
+  subTopicCoverages SubTopicCoverage[]
+
+  @@index([role])
+  @@index([dept_id])
+  @@map("faculty")
+}
+
+// =======================
+// 4. Student Model
+// =======================
+model Student {
+  id         Int    @id @default(autoincrement())
+  studentID  String @unique @default(cuid()) @db.VarChar(100)
+  email      String @unique @db.VarChar(150)
+  name       String @db.VarChar(100)
+  password   String @db.VarChar(255)
+  status     Status @default(A)
+  currentSem String @default("01") @db.VarChar(2)
+
+  academicYearId Int 
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  semester             Semester              @relation(fields: [currentSem], references: [semester_id], onDelete: Restrict)
+  studentCourses       StudentCourse[]
+  studentAcademicYears StudentAcademicYear[] 
+
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @updatedAt @db.Timestamp(0)
+
+  @@index([currentSem])
+  @@index([academicYearId])
+  @@map("student")
+}
+
+// =======================
+// Enums
+// =======================
+enum Status {
+  A
+  D
+}
+
+enum FacultyRoleType {
+  HOD
+  TEACHER
+}
+
+// =======================
+// Department Model
+// =======================
+model Department {
+  dept_id   String @id @db.VarChar(10)
+  dept_name String @db.VarChar(100)
+
+  // Relation: Department has many courses
+  courses   Course[]
+  faculties Faculty[]
+
+  @@map("department")
+}
+
+// =======================
+// Semester Model
+// =======================
+model Semester {
+  semester_id   String @id @db.VarChar(2)
+  semester_name String @db.VarChar(20)
+
+  // Relations
+  courses           Course[] // Semester has many courses
+  students          Student[] // Semester has many students
+  topicCoverages    TopicCoverage[]
+  subTopicCoverages SubTopicCoverage[]
+
+  @@map("semester")
+}
+
+// =======================
+// Course Model
+// =======================
+model Course {
+  course_id   String @id
+  course_name String @db.VarChar(100)
+  semester_id String @db.VarChar(2)
+  dept_id     String @db.VarChar(10)
+
+  department        Department         @relation(fields: [dept_id], references: [dept_id])
+  semester          Semester           @relation(fields: [semester_id], references: [semester_id])
+  facultyCourses    FacultyCourse[]
+  topics            Topic[]
+  studentCourses    StudentCourse[]
+  topicCoverages    TopicCoverage[]
+  subTopicCoverages SubTopicCoverage[]
+
+  @@index([dept_id])
+  @@index([semester_id])
+  @@map("course")
+}
+
+// =======================
+// Faculty-Course Mapping 
+// =======================
+model FacultyCourse {
+  id             Int      @id @default(autoincrement())
+  facultyId      Int
+  courseId       String
+  academicYearId Int 
+  created_at     DateTime @default(now()) @db.Timestamp(0)
+
+  faculty      Faculty      @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  course       Course       @relation(fields: [courseId], references: [course_id], onDelete: Cascade)
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Cascade) // ✅ NEW
+
+  @@unique([facultyId, courseId, academicYearId]) 
+  @@index([facultyId])
+  @@index([courseId])
+  @@index([academicYearId]) 
+  @@map("faculty_course_mapping")
+}
+
+// =======================
+// Topic Table
+// =======================
+model Topic {
+  topic_id          Int     @id @default(autoincrement())
+  topic_name        String  @db.VarChar(255)
+  topic_description String? @db.Text
+  courseId          String
+
+  course         Course          @relation(fields: [courseId], references: [course_id], onDelete: Cascade)
+  subtopics      SubTopic[]
+  topicCoverages TopicCoverage[]
+
+  @@index([courseId])
+  @@map("topic")
+}
+
+// =======================
+// Sub-Topic Table 
+// =======================
+model SubTopic {
+  subtopic_id          Int     @id @default(autoincrement())
+  subtopic_name        String  @db.VarChar(255)
+  subtopic_description String? @db.Text
+  topicId              Int?
+  parentId             Int?
+
+  topic             Topic?             @relation(fields: [topicId], references: [topic_id], onDelete: Cascade)
+  parent            SubTopic?          @relation("SubTopicHierarchy", fields: [parentId], references: [subtopic_id])
+  children          SubTopic[]         @relation("SubTopicHierarchy")
+  subTopicCoverages SubTopicCoverage[]
+
+  @@index([topicId])
+  @@index([parentId])
+  @@map("subtopic")
+}
+
+// =======================
+//batch
+//========================
+model AcademicYear {
+  id       Int     @id @default(autoincrement())
+  label    String  @unique // "2023-2024"
+  isActive Boolean @default(false)
+
+  facultyCourses       FacultyCourse[]
+  topicCoverages       TopicCoverage[]
+  subTopicCoverages    SubTopicCoverage[]
+  students             Student[] // current students
+  studentAcademicYears StudentAcademicYear[] // history
+
+  @@map("academic_year")
+}
+
+// =======================
+// Topic covarage
+// =======================
+model TopicCoverage {
+  id             Int      @id @default(autoincrement())
+  topicId        Int
+  facultyId      Int
+  courseId       String
+  semesterId     String
+  academicYearId Int
+  taughtOn       DateTime @db.Date // actual teaching date
+  remark         String?
+  createdAt      DateTime @default(now()) // record creation time
+
+  topic        Topic        @relation(fields: [topicId], references: [topic_id])
+  faculty      Faculty      @relation(fields: [facultyId], references: [id])
+  course       Course       @relation(fields: [courseId], references: [course_id])
+  semester     Semester     @relation(fields: [semesterId], references: [semester_id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  @@unique([topicId, facultyId, courseId, semesterId, academicYearId])
+  @@index([courseId, semesterId, academicYearId])
+  @@map("topic_coverage")
+}
+
+// =======================
+// Sub Topic covarage
+// =======================
+model SubTopicCoverage {
+  id             Int      @id @default(autoincrement())
+  subtopicId     Int
+  facultyId      Int
+  courseId       String
+  semesterId     String
+  academicYearId Int
+  taughtOn       DateTime @db.Date
+  remark         String?
+  createdAt      DateTime @default(now())
+
+  subtopic     SubTopic     @relation(fields: [subtopicId], references: [subtopic_id])
+  faculty      Faculty      @relation(fields: [facultyId], references: [id])
+  course       Course       @relation(fields: [courseId], references: [course_id])
+  semester     Semester     @relation(fields: [semesterId], references: [semester_id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  @@unique([subtopicId, facultyId, courseId, semesterId, academicYearId])
+  @@index([courseId, semesterId, academicYearId])
+  @@map("subtopic_coverage")
+}
+
+// =======================
+// Student-Course Mapping 
+// =======================
+model StudentCourse {
+  id         Int      @id @default(autoincrement())
+  studentId  Int
+  courseId   String
+  created_at DateTime @default(now()) @db.Timestamp(0)
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course  Course  @relation(fields: [courseId], references: [course_id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+  @@index([courseId])
+  @@map("student_course_mapping")
+}
+
+model StudentAcademicYear {
+  id             Int               @id @default(autoincrement())
+  studentId      Int
+  academicYearId Int
+  status         StudentYearStatus @default(REGULAR)
+  created_at     DateTime          @default(now()) @db.Timestamp(0)
+
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, academicYearId])
+  @@index([studentId])
+  @@index([academicYearId])
+  @@index([studentId, status])
+  @@map("student_academic_year")
+}
+
+enum StudentYearStatus {
+  REGULAR
+  BACKLOG
+  REPEAT
+  PASSED
+}
