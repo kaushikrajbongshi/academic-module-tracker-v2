@@ -6,19 +6,23 @@ import {
   IsInt,
   IsOptional,
   Length,
+  IsNotEmpty,
 } from 'class-validator';
 
 export class CreateStudentDTO {
   @IsEmail()
-  email: string;
+  @IsNotEmpty()
+  email!: string;
 
   @IsString()
   @MinLength(2)
-  name: string;
+  @IsNotEmpty()
+  name!: string;
 
   @IsString()
+  @IsNotEmpty()
   @MinLength(6)
-  password: string;
+  password!: string;
 
   @IsOptional()
   @IsString()
@@ -26,6 +30,7 @@ export class CreateStudentDTO {
   currentSem?: string;
 
   @IsInt()
+  @IsNotEmpty()
   @Type(() => Number)
-  academicYearId: number;
+  academicYearId!: number;
 }
