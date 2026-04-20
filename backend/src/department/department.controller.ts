@@ -7,7 +7,7 @@ import { UpdateDepartmentDto } from './dto/update-department-dto';
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
 
-  @Post('new')
+  @Post()
   async createDepartment(@Body() dto: CreateDepartmentDTO) {
     return this.departmentService.createDepartment(dto);
   }
