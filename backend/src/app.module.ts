@@ -10,6 +10,8 @@ import { CourseModule } from './course/course.module';
 import { SemesterModule } from './semester/semester.module';
 import { AcademicYearController } from './academic-year/academic-year.controller';
 import { AcademicYearModule } from './academic-year/academic-year.module';
+import { FacultyModule } from './faculty/faculty.module';
+import { StudentModule } from './student/student.module';
 
 
 
@@ -26,8 +28,10 @@ import { AcademicYearModule } from './academic-year/academic-year.module';
     CourseModule,
     SemesterModule,
     AcademicYearModule,
+    FacultyModule,
+    StudentModule,
   ],
-  controllers: [AppController, AcademicYearController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
